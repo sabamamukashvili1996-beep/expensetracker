@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Xarjebi — Expense Tracker | Support</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b0b0f" />
+
+  <!-- ✅ OPTIONAL: put your app icon in the repo root as "icon.png" -->
+  <link rel="icon" href="./icon.png" />
+
+  <style>
+    :root{
+      /* ✅ Your app vibe: black + gold */
+      --bg:#07070a;
+      --bg2:#0c0c12;
+      --card:rgba(255,255,255,.06);
+      --card2:rgba(255,255,255,.08);
+      --stroke:rgba(255,215,0,.18);
+      --stroke2:rgba(255,255,255,.10);
+      --gold:#FFD700;
+      --gold2:#D4AF37;
+      --text:#ffffff;
+      --muted:rgba(255,255,255,.72);
+      --muted2:rgba(255,255,255,.55);
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --radius: 18px;
+      --radius2: 26px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 800px at 15% 10%, rgba(255,215,0,.12), transparent 60%),
+        radial-gradient(900px 600px at 85% 15%, rgba(212,175,55,.10), transparent 55%),
+        radial-gradient(1200px 900px at 50% 95%, rgba(255,255,255,.06), transparent 60%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+      min-height:100vh;
+    }
+
+    a{color:var(--gold); text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    .wrap{max-width:1100px; margin:0 auto; padding:22px 16px 70px}
+
+    /* top bar */
+    .top{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; padding:12px 14px;
+      border:1px solid var(--stroke2);
+      background:rgba(0,0,0,.25);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+    }
+    .brand{display:flex; align-items:center; gap:12px; min-width:0}
+    .logo{
+      width:42px; height:42px; border-radius:14px;
+      background: linear-gradient(145deg, rgba(255,215,0,.22), rgba(255,255,255,.08));
+      border:1px solid var(--stroke);
+      box-shadow: 0 10px 28px rgba(0,0,0,.35);
+      display:grid; place-items:center;
+      overflow:hidden;
+    }
+    .logo img{width:100%; height:100%; object-fit:cover}
+    .brand h1{
+      font-size:16px; margin:0; font-weight:800; letter-spacing:.2px;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .brand p{margin:0; font-size:12px; color:var(--muted2)}
+    .lang{
+      display:flex; gap:8px; align-items:center;
+    }
+    .pill{
+      border:1px solid var(--stroke2);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:13px;
+      cursor:pointer;
+      user-select:none;
+      transition:.2s;
+    }
+    .pill:hover{transform: translateY(-1px); border-color: var(--stroke)}
+    .pill.active{
+      background: rgba(255,215,0,.16);
+      border-color: rgba(255,215,0,.35);
+      color: var(--gold);
+    }
+
+    /* hero */
+    .hero{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:16px;
+      align-items:stretch;
+    }
+    @media (max-width: 900px){
+      .hero{grid-template-columns:1fr}
+    }
+
+    .panel{
+      border:1px solid var(--stroke2);
+      background: var(--card);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .panel:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(600px 220px at 30% 0%, rgba(255,215,0,.20), transparent 55%);
+      pointer-events:none;
+    }
+    .heroMain{padding:26px 22px}
+    .kicker{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,215,0,.28);
+      background: rgba(255,215,0,.10);
+      color: var(--gold);
+      font-weight:700;
+      font-size:12px;
+      letter-spacing:.2px;
+    }
+    .dot{
+      width:8px; height:8px; border-radius:999px;
+      background: var(--gold);
+      box-shadow: 0 0 24px rgba(255,215,0,.55);
+    }
+    .heroTitle{
+      margin:14px 0 10px;
+      font-size:42px;
+      line-height:1.06;
+      letter-spacing:-.6px;
+      font-weight:900;
+    }
+    @media (max-width: 520px){ .heroTitle{font-size:34px} }
+    .heroSub{
+      margin:0;
+      color: var(--muted);
+      font-size:16px;
+      line-height:1.6;
+      max-width: 60ch;
+    }
+    .ctaRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:18px}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:12px 14px;
+      border-radius: 14px;
+      border:1px solid var(--stroke2);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight:800;
+      cursor:pointer;
+      transition:.2s;
+      min-height:44px;
+    }
+    .btn:hover{transform: translateY(-1px); border-color: var(--stroke)}
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(255,215,0,.28), rgba(212,175,55,.12));
+      border-color: rgba(255,215,0,.35);
+      color: var(--gold);
+    }
+    .btn small{font-weight:700; color: var(--muted2)}
+    .btnIcon{width:18px; height:18px; opacity:.95}
+
+    .heroSide{padding:18px}
+    .statGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .stat{
+      border:1px solid var(--stroke2);
+      background: rgba(0,0,0,.18);
+      border-radius: 16px;
+      padding:14px;
+      min-height:88px;
+      position:relative;
+      overflow:hidden;
+    }
+    .stat:before{
+      content:"";
+      position:absolute; inset:-1px;
+      background: radial-gradient(300px 120px at 20% 10%, rgba(255,215,0,.15), transparent 58%);
+      pointer-events:none;
+    }
+    .stat h3{margin:0; font-size:12px; color: var(--muted2); font-weight:700}
+    .stat p{margin:8px 0 0; font-size:18px; font-weight:900}
+    .mini{margin-top:10px; color: var(--muted2); font-size:12px; line-height:1.5}
+
+    /* sections */
+    .grid{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:16px;
+    }
+    @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
+
+    .section{padding:20px 18px}
+    .section h2{
+      margin:0 0 10px;
+      font-size:18px;
+      letter-spacing:-.2px;
+      font-weight:900;
+      display:flex; align-items:center; gap:10px;
+    }
+    .badge{
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,215,0,.28);
+      background: rgba(255,215,0,.10);
+      color: var(--gold);
+      font-weight:800;
+    }
+    .p{margin:0; color: var(--muted); line-height:1.65}
+    .list{margin:12px 0 0; padding-left:18px; color: var(--muted)}
+    .list li{margin:8px 0}
+    .faq{margin-top:10px}
+    details{
+      border:1px solid var(--stroke2);
+      background: rgba(0,0,0,.16);
+      border-radius: 14px;
+      padding:12px 12px;
+      margin:10px 0;
+    }
+    summary{
+      cursor:pointer;
+      font-weight:900;
+      color: var(--text);
+      outline:none;
+    }
+    details p{margin:10px 0 0; color: var(--muted); line-height:1.6}
+
+    .contactRow{
+      display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;
+    }
+    .chip{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px;
+      border-radius: 999px;
+      border:1px solid var(--stroke2);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight:800;
+      font-size:13px;
+    }
+
+    /* footer */
+    footer{
+      margin-top:18px;
+      text-align:center;
+      color: var(--muted2);
+      font-size:13px;
+      padding:18px 0 6px;
+    }
+
+    /* language blocks */
+    .langBlock{display:none}
+    .langBlock.active{display:block}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <div class="top">
+      <div class="brand">
+        <div class="logo" title="App Icon">
+          <!-- Put your icon.png in repo root. If you don't have it yet, this still looks fine. -->
+          <img src="./icon.png" alt="Xarjebi icon" onerror="this.style.display='none'; this.parentElement.innerHTML='₾'; this.parentElement.style.fontWeight='900'; this.parentElement.style.color='var(--gold)'; this.parentElement.style.fontSize='18px';">
+        </div>
+        <div style="min-width:0">
+          <h1>Xarjebi — Expense Tracker</h1>
+          <p>Support • Help • Privacy</p>
+        </div>
+      </div>
+
+      <div class="lang">
+        <div class="pill active" id="btn-en" onclick="setLang('en')">EN</div>
+        <div class="pill" id="btn-ka" onclick="setLang('ka')">KA</div>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div class="panel heroMain">
+        <div class="kicker"><span class="dot"></span> Clean budgeting • Georgia-friendly</div>
+
+        <div class="langBlock active" id="lang-en">
+          <div class="heroTitle">Track expenses.<br/>Stay in control.</div>
+          <p class="heroSub">
+            Xarjebi helps you record expenses, set ranges (from–to), and plan your month with clarity.
+            If you have any issue, contact us and we’ll help fast.
+          </p>
+
+          <div class="ctaRow">
+            <!-- ✅ Put your real store links when ready -->
+            <a class="btn primary" href="#" onclick="alert('Add your Google Play link here'); return false;">
+              <span>Google Play</span> <small>coming</small>
+            </a>
+            <a class="btn" href="#" onclick="alert('Add your App Store link here'); return false;">
+              <span>App Store</span> <small>coming</small>
+            </a>
+            <a class="btn" href="mailto:sabamamukashvili1996@gmail.com">
+              <span>Email Support</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="langBlock" id="lang-ka">
+          <div class="heroTitle">ხარჯების კონტროლი<br/>მარტივად.</div>
+          <p class="heroSub">
+            Xarjebi გაძლევთ საშუალებას მარტივად ჩაწეროთ ხარჯები, მიუთითოთ დიაპაზონი (დან–მდე) და დაგეგმოთ თვე.
+            ნებისმიერ პრობლემაზე — მოგვწერეთ და სწრაფად დაგეხმარებით.
+          </p>
+
+          <div class="ctaRow">
+            <a class="btn primary" href="#" onclick="alert('აქ ჩასვი Google Play ლინკი'); return false;">
+              <span>Google Play</span> <small>მალე</small>
+            </a>
+            <a class="btn" href="#" onclick="alert('აქ ჩასვი App Store ლინკი'); return false;">
+              <span>App Store</span> <small>მალე</small>
+            </a>
+            <a class="btn" href="mailto:sabamamukashvili1996@gmail.com">
+              <span>ემეილი</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel heroSide">
+        <div class="statGrid">
+          <div class="stat">
+            <h3>Pricing</h3>
+            <p>₾ 3</p>
+          </div>
+          <div class="stat">
+            <h3>Data</h3>
+            <p>Synced</p>
+          </div>
+          <div class="stat">
+            <h3>Ranges</h3>
+            <p>From–To</p>
+          </div>
+          <div class="stat">
+            <h3>Support</h3>
+            <p>24/7</p>
+          </div>
+        </div>
+
+        <div class="mini">
+          Tip: Add <b>icon.png</b> to repo root for a fully branded look.
+          You can also add screenshots as <b>shot1.jpg</b>, <b>shot2.jpg</b> and link them below.
+        </div>
+
+        <div class="contactRow">
+          <span class="chip">✉️ sabamamukashvili1996@gmail.com</span>
+          <!-- If you want WhatsApp support, uncomment and change number -->
+          <!-- <a class="chip" href="https://wa.me/9955XXXXXXXX" target="_blank" rel="noreferrer">💬 WhatsApp</a> -->
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="panel section">
+        <h2>Support <span class="badge">Contact</span></h2>
+
+        <div class="langBlock active" id="support-en">
+          <p class="p">
+            If something doesn’t work (login, saving expenses, recurring schedules, totals), send us an email and include:
+            your device model + Android/iOS version and what you expected vs what happened.
+          </p>
+
+          <div class="contactRow">
+            <a class="chip" href="mailto:sabamamukashvili1996@gmail.com">✉️ Email</a>
+            <!-- Add WhatsApp later if you want -->
+          </div>
+        </div>
+
+        <div class="langBlock" id="support-ka">
+          <p class="p">
+            თუ რამე არ მუშაობს (შესვლა, ხარჯების დამატება, განმეორებადი ხარჯები, ჯამები),
+            მოგვწერეთ ემეილზე და მიუთითეთ: ტელეფონის მოდელი + Android/iOS ვერსია და რა უნდა მომხდარიყო/რა მოხდა.
+          </p>
+
+          <div class="contactRow">
+            <a class="chip" href="mailto:sabamamukashvili1996@gmail.com">✉️ ემეილი</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel section">
+        <h2>FAQ <span class="badge">Help</span></h2>
+
+        <div class="langBlock active" id="faq-en">
+          <div class="faq">
+            <details>
+              <summary>My date shows one day earlier</summary>
+              <p>Update to the latest version. We fixed date handling to respect Tbilisi timezone (Asia/Tbilisi).</p>
+            </details>
+            <details>
+              <summary>Totals show only one number (not range)</summary>
+              <p>Ranges work when you enter From–To. If your range doesn’t appear, make sure you updated and saved the expense correctly.</p>
+            </details>
+            <details>
+              <summary>I can’t log in / data doesn’t sync</summary>
+              <p>Check your internet connection and try again. If it persists, email us with a screenshot of the error.</p>
+            </details>
+          </div>
+        </div>
+
+        <div class="langBlock" id="faq-ka">
+          <div class="faq">
+            <details>
+              <summary>თარიღი ერთ დღით ადრე მეჩვენება</summary>
+              <p>განაახლეთ აპი. თარიღები გასწორდა თბილისის დროით (Asia/Tbilisi).</p>
+            </details>
+            <details>
+              <summary>ჯამი მხოლოდ ერთ რიცხვს აჩვენებს (არა დიაპაზონს)</summary>
+              <p>დიაპაზონისთვის შეიყვანეთ დან–მდე. თუ არ ჩანს, გადაამოწმეთ რომ აპი განახლებულია და ხარჯი სწორად შეინახა.</p>
+            </details>
+            <details>
+              <summary>ვერ შევდივარ / არ სინქრონდება მონაცემები</summary>
+              <p>ინტერნეტი გადაამოწმეთ და თავიდან სცადეთ. თუ ისევ გაგრძელდება, მოგვწერეთ ეკრანის ფოტოთი.</p>
+            </details>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="panel section">
+        <h2>Privacy <span class="badge">Required</span></h2>
+
+        <div class="langBlock active" id="privacy-en">
+          <p class="p">
+            Stores often require a privacy policy URL even without ads.
+            Create a <b>privacy.html</b> page in this repo and link it here.
+          </p>
+          <ul class="list">
+            <li><a href="./privacy.html">Open Privacy Policy</a> (create this file)</li>
+            <li>Contact: <a href="mailto:sabamamukashvili1996@gmail.com">sabamamukashvili1996@gmail.com</a></li>
+          </ul>
+        </div>
+
+        <div class="langBlock" id="privacy-ka">
+          <p class="p">
+            მაღაზიებს ხშირად სჭირდებათ Privacy Policy ლინკი, რეკლამის გარეშეც.
+            შექმენით <b>privacy.html</b> ამავე repo-ში და ჩასვით აქ.
+          </p>
+          <ul class="list">
+            <li><a href="./privacy.html">Privacy Policy</a> (შექმენით ეს ფაილი)</li>
+            <li>კონტაქტი: <a href="mailto:sabamamukashvili1996@gmail.com">sabamamukashvili1996@gmail.com</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel section">
+        <h2>About <span class="badge">Info</span></h2>
+
+        <div class="langBlock active" id="about-en">
+          <p class="p">
+            Made in Georgia 🇬🇪 — simple and elegant expense tracking.
+            Want a more “store-like” landing page? Add screenshots and your store links above.
+          </p>
+        </div>
+
+        <div class="langBlock" id="about-ka">
+          <p class="p">
+            შექმნილია საქართველოში 🇬🇪 — მარტივი და ელეგანტური ხარჯების კონტროლი.
+            გინდა უფრო “სთორის” სტილის გვერდი? დაამატე სკრინშოთები და ლინკები ზემოთ.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Xarjebi © 2026 • Support page • Tbilisi, Georgia 🇬🇪
+    </footer>
+  </div>
+
+  <script>
+    function setLang(lang){
+      const en = lang === 'en';
+      document.getElementById('btn-en').classList.toggle('active', en);
+      document.getElementById('btn-ka').classList.toggle('active', !en);
+
+      const blocks = ['lang-en','lang-ka','support-en','support-ka','faq-en','faq-ka','privacy-en','privacy-ka','about-en','about-ka'];
+      blocks.forEach(id => document.getElementById(id).classList.remove('active'));
+      if(en){
+        ['lang-en','support-en','faq-en','privacy-en','about-en'].forEach(id => document.getElementById(id).classList.add('active'));
+      }else{
+        ['lang-ka','support-ka','faq-ka','privacy-ka','about-ka'].forEach(id => document.getElementById(id).classList.add('active'));
+      }
+    }
+  </script>
+</body>
+</html>
